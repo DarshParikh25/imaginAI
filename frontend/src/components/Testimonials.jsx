@@ -31,7 +31,7 @@ const Testimonials = () => {
             <div className='flex items-center justify-center gap-20 mt-16 flex-wrap'>
                 {
                     tests.map((test, index) => (
-                        <div key={index} className='bg-[#1f1f1f] flex flex-col justify-center items-center p-6 rounded-lg w-full max-w-xs hover:scale-[1.02] transition-all duration-500'>
+                        <div key={index} className='bg-[#1f1f1f] flex flex-col justify-center items-center p-6 rounded-lg w-full max-w-xs hover:scale-[1.03] transition-all duration-500'>
                             <div className='flex flex-col items-center mb-4'>
                                 <img src={test.image} alt={test.name} className='w-12 h-12 rounded-full border-2 border-[#b49166]' />
                                 <div>
