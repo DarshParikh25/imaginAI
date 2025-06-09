@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
 import { AppContext } from '../context/AppContext'
+import { motion } from 'motion/react';
 
 const BuyCredits = () => {
 
@@ -33,7 +34,13 @@ const BuyCredits = () => {
     ]
 
     return (
-        <div className='flex flex-col items-center justify-center my-12 text-center'>
+        <motion.div 
+            className='flex flex-col items-center justify-center my-12 text-center'
+            initial={{ opacity: 0.2, y: 100 }}
+            transition={{ duration: 1 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+        >
             <div className='inline-flex items-center justify-center text-center bg-transparent text-white rounded-full px-10 py-1 gap-1.5 border border-white'>
                 <p className='text-xs sm:text-sm font-light'>FIND YOUR PLAN</p>
             </div>
@@ -54,7 +61,7 @@ const BuyCredits = () => {
                     ))
                 }
             </div>
-        </div>
+        </motion.div>
     )
 }
 

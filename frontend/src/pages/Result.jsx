@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { motion } from 'motion/react'
 
 const Result = () => {
 
@@ -12,7 +13,13 @@ const Result = () => {
     }
 
     return (
-        <div className='flex flex-col items-center justify-center min-h-[80vh] gap-5'>
+        <motion.div 
+            className='flex flex-col items-center justify-center min-h-[80vh] gap-5'
+            initial={{ opacity: 0.2, y: 100 }}
+            transition={{ duration: 1 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+        >
             <div className='relative'>
                 <div className='w-full sm:w-sm aspect-square border-2 border-[#ffffffaf] rounded-lg flex justify-center items-center px-4 py-6'>
                     {
@@ -41,7 +48,7 @@ const Result = () => {
                     </div>
                 )
             }
-        </div>
+        </motion.div>
     )
 }
 

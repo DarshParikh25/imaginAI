@@ -1,4 +1,5 @@
 import React from 'react'
+import { motion } from 'motion/react';
 
 const Testimonials = () => {
     const tests = [
@@ -25,7 +26,13 @@ const Testimonials = () => {
         }
     ]
     return (
-        <div className='flex flex-col items-center justify-center py-16 text-center'>
+        <motion.div 
+            className='flex flex-col items-center justify-center py-16 text-center'
+            initial={{ opacity: 0.2, y: 100 }}
+            transition={{ duration: 1 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+        >
             <h2 className='text-3xl sm:text-4xl font-semibold mb-2 text-[#b49166]'>Customer Testimonials</h2>
             <p className='text-[#ffffffaf] mb-8'>Hear from Our Users.</p>
             <div className='flex items-center justify-center gap-20 mt-16 flex-wrap'>
@@ -52,7 +59,7 @@ const Testimonials = () => {
                     ))
                 }
             </div>
-        </div>
+        </motion.div>
     )
 }
 

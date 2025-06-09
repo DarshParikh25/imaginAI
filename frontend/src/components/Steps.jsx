@@ -1,4 +1,5 @@
 import React from 'react'
+import { motion } from 'motion/react';
 
 const Steps = () => {
     const steps = [
@@ -19,7 +20,13 @@ const Steps = () => {
         }
     ];
     return (
-        <div className='flex flex-col items-center justify-center py-20 text-center'>
+        <motion.div 
+            className='flex flex-col items-center justify-center py-20 text-center'
+            initial={{ opacity: 0.2, y: 100 }}
+            transition={{ duration: 1 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+        >
             <h2 className='text-3xl sm:text-4xl font-semibold mb-2 text-[#b49166]'>How it works?</h2>
             <p className='mb-8 text-[#ffffffaf]'>Create Images with Just Words.</p>
             <div className='flex flex-col items-center justify-center gap-5 mt-8'>
@@ -35,7 +42,7 @@ const Steps = () => {
                     ))
                 }
             </div>
-        </div>
+        </motion.div>
     )
 }
 
