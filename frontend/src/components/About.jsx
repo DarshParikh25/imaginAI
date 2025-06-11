@@ -11,7 +11,7 @@ const About = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
         >
-            <h2 className='text-3x sm:text-4xl font-semibold mb-2 text-[#b49166]'>Create AI Images</h2>
+            <h2 className='text-3xl sm:text-4xl font-semibold mb-2 text-[#b49166]'>Create AI Images</h2>
             <p className='text-[#ffffffaf] mb-8'>AI Images from Your Text.</p>
             <div className='flex justify-center items-between gap-16 my-8 max-w-5xl max-lg:flex-wrap'>
                 <img src="/sample_img_1.png" alt="" width={400} />
