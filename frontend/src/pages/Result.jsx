@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { motion } from 'motion/react'
+import { AppContext } from '../context/AppContext';
 
 const Result = () => {
 
@@ -8,8 +9,19 @@ const Result = () => {
     const [loading, setLoading] = useState(false);
     const [prompt, setPrompt] = useState('');
 
-    const handleSubmit = () => {
+    const { generateImage } = useContext(AppContext);
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        if(prompt) {
+            const image = await generateImage(prompt);
+            if(image) {
+                setIsImageLoaded(true);
+                setImage(image);
+            }
+        }
+        setLoading(false);
     }
 
     return (
@@ -24,7 +36,7 @@ const Result = () => {
                 <div className='w-full sm:w-sm aspect-square border-2 border-[#ffffffaf] rounded-lg flex justify-center items-center px-4 py-6'>
                     {
                         isImageLoaded ? (
-                            <img src="" alt="" />
+                            <img src={image} alt="" />
                         ) : (
                             <>
                                 <p className={`text-sm text-center font-medium tracking-wide ${!loading && 'hidden' }`}>Loading...</p>

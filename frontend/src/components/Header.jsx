@@ -71,11 +71,12 @@ const Header = () => {
                 ))}
             </motion.div>
             <motion.p 
-                className='mt-2 text-[#ffffffaf]'>Generated images from <span className='text-[#967a56]'
+                className='mt-2 text-[#ffffffaf]'
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1.2, duration: 0.8 }}
-            >ImaginAI</span></motion.p>
+            >Generated images from <span onClick={() => navigate('/')} className='text-[#967a56] cursor-pointer'>ImaginAI</span>
+            </motion.p>
         </motion.div>
     )
 }
