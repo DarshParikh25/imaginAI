@@ -10,7 +10,10 @@ const app = express();
 
 // Middleware setup
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: 'https://your-frontend.onrender.com',
+    credentials: true
+}));
 
 await connectDB(); // Connect to MongoDB
 
