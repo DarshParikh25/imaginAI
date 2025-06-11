@@ -12,7 +12,7 @@ const app = express();
 app.use(express.json());
 app.use(cors({
     origin: 'https://imaginai-backend-u0dm.onrender.com',
-    credentials: true
+    credentials: false
 }));
 
 await connectDB(); // Connect to MongoDB
