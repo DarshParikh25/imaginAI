@@ -11,7 +11,7 @@ const app = express();
 // Middleware setup
 app.use(express.json());
 app.use(cors({
-    origin: 'https://imaginai-backend-u0dm.onrender.com',
+    origin: 'https://imaginai-frontend-w3y0.onrender.com',
     credentials: false
 }));
 
