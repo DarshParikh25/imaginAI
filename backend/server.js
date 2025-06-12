@@ -5,14 +5,25 @@ import connectDB from './config/mongodb.js';
 import userRouter from './routes/userRoutes.js';
 import imageRouter from './routes/imageRoutes.js';
 
-const PORT = process.env.PORT || 10000; // Default port if not specified in .env
+const PORT = process.env.PORT || 4000; // Default port if not specified in .env
 const app = express();
 
 // Middleware setup
 app.use(express.json());
+const allowedOrigins = [
+    "http://localhost:5173",
+    "https://imaginai-frontend-w3y0.onrender.com"
+];
+
 app.use(cors({
-    origin: 'https://imaginai-frontend-w3y0.onrender.com',
-    credentials: false
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error("CORS not allowed for this origin"));
+        }
+    },
+    credentials: true
 }));
 
 await connectDB(); // Connect to MongoDB
