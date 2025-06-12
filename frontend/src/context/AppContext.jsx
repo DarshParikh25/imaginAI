@@ -13,7 +13,7 @@ const AppContextProvider = (props) => {
 
     const navigate = useNavigate();
 
-    const backendUrl = import.meta.env.REACT_APP_API_URL|| import.meta.env.VITE_BACKEND_URL;
+    const backendUrl = 'https://imaginai-backend-u0dm.onrender.com';
 
     const loadCredits = async () => {
         try {
