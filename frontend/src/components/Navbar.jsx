@@ -32,15 +32,17 @@ const Navbar = () => {
                         <div className='relative group cursor-pointer'>
                             <img src="/profile.png" alt="" className='w-10' />
                             <div className='absolute hidden group-hover:block top-0 -right-1.5 z-10 rounded pt-12'>
-                                <ul className='list-none m-0 p-2 bg-[#b49166] text-black text-sm rounded-lg'>
+                                <ul className='flex justify-center items-center gap-1 list-none m-0 py-2 px-4 bg-[#b49166] text-black text-sm rounded-lg'>
                                     <li 
                                         onClick={logout} 
-                                        className='px-1 py-1 cursor-pointer pr-10'
+                                        className='px-1 py-1 cursor-pointer'
                                     >Logout</li>
+                                    <img src="/logout.png" alt="" width={18} />
                                 </ul>
                             </div>
                         </div>
                     </div>
+                    <img src="/sm-logout.png" alt="" onClick={logout} width={30} className='cursor-pointer hidden max-lg:block' />
                 </div>
                 :
                 <div className='flex items-center gap-3 sm:gap-8'>
