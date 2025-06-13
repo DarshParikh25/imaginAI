@@ -152,7 +152,7 @@ const razorpayPayment = async(req, res) => {
             case 'Basic':
                 plan = 'Basic';
                 credits = 50;
-                amount = 1;
+                amount = 52;
                 break;
         
             case 'Advanced':
