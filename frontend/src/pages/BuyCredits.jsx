@@ -1,15 +1,76 @@
 import React, { useContext } from 'react'
 import { AppContext } from '../context/AppContext'
 import { motion } from 'motion/react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import axios from 'axios';
 
 const BuyCredits = () => {
 
-    const { user } = useContext(AppContext);
+    const { user, backendUrl, loadCredits, token, setShowLogin } = useContext(AppContext);
+
+    const navigate = useNavigate();
+
+    const initPayment = async ({ amount, currency, orderId, key, receipt }) => {
+        const options = {
+            key,
+            amount,
+            currency,
+            name: "imaginAI",
+            description: `Payment for credits`,
+            order_id: orderId,
+            receipt: receipt,
+            handler: async (response) => {
+                try {
+                    const { data } = await axios.post(backendUrl + '/api/user/verify', { response }, {
+                        headers: { token }
+                    })
+
+                    if(data.success) {
+                        loadCredits();
+                        navigate('/');
+                        toast.success('Successfully added credits to your account!');
+                    }
+                } catch (error) {
+                    toast.error(error.message)
+                }
+            },
+            prefill: {
+                name: user?.name,
+                email: user?.email,
+            },
+            theme: {
+                color: "#b49166",
+            }
+        }
+
+        const rzpy = new window.Razorpay(options);
+        rzpy.open();
+    }
+
+    const handlePayment = async (planId) => {
+        try {
+            if(!user) {
+                setShowLogin(true);
+                return;
+            }
+
+            const { data } = await axios.post(backendUrl + '/api/user/pay', { planId }, {
+                headers: { token }
+            })
+
+            if(data.success) {
+                initPayment(data);
+            }
+        } catch (error) {
+            toast.error(error.message)
+        }
+    }
 
     const plans = [
         {
             icon: "/basic.png",
-            name: "Basic",
+            id: "Basic",
             desc: "For individuals and hobbyists",
             price: "$9.99",
             credits: "50 Credits",
@@ -17,7 +78,7 @@ const BuyCredits = () => {
         },
         {
             icon: "/advanced.png",
-            name: "Advanced",
+            id: "Advanced",
             desc: "Built for creators and pros",
             price: "$29.99",
             credits: "250 Credits",
@@ -25,7 +86,7 @@ const BuyCredits = () => {
         },
         {
             icon: "/business.png",
-            name: "Business",
+            id: "Business",
             desc: "Designed for teams and enterprises",
             price: "$79.99",
             credits: "1000 Credits",
@@ -51,12 +112,12 @@ const BuyCredits = () => {
                         <div key={index} className='bg-[#1f1f1f] flex flex-col justify-center items-center p-6 rounded-lg w-full max-w-xs'>
                             <div className='flex items-center ml-4 mb-3 w-full'>
                                 <img src={plan.icon} alt={plan.name} width={40} />
-                                <h3 className='text-left mx-3 text-2xl font-semibold text-[#b49166]'>{plan.name}</h3>
+                                <h3 className='text-left mx-3 text-2xl font-semibold text-[#b49166]'>{plan.id}</h3>
                             </div>
                             <p className='text-sm text-[#ffffffaf] text-left w-full ml-4'>{plan.desc}</p>
                             <p className='text-[#ffffffaf] mt-4 mb-2 w-full text-left ml-4 font-light text-sm'><span className='text-2xl font-medium'>{plan.price}</span> / {plan.credits}</p>
                             <p className='text-[#ffffffaf] text-sm w-full text-left ml-4'>{plan.costpercredit} per credit</p>
-                            <button className='border-none bg-[#b49166] text-black text-xs sm:text-sm py-3 font-medium w-full rounded-lg mt-10 cursor-pointer hover:scale-[1.03] transition-all duration-500 hover:bg-[#a17f5c]'>{!user ? 'Activate Plan!' : 'Purchase'}</button>
+                            <button onClick={() => {handlePayment(plan.id)}} className='border-none bg-[#b49166] text-black text-xs sm:text-sm py-3 font-medium w-full rounded-lg mt-10 cursor-pointer hover:scale-[1.03] transition-all duration-500 hover:bg-[#a17f5c]'>{!user ? 'Activate Plan!' : 'Purchase'}</button>
                         </div>
                     ))
                 }
