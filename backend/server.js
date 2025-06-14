@@ -5,7 +5,7 @@ import connectDB from './config/mongodb.js';
 import userRouter from './routes/userRoutes.js';
 import imageRouter from './routes/imageRoutes.js';
 
-const PORT = process.env.PORT || 10000; // Default port if not specified in .env
+const PORT = process.env.PORT || 4000; // Default port if not specified in .env
 const app = express();
 
 // Middleware setup
