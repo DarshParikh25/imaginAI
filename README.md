@@ -91,7 +91,7 @@ PORT=you_backend_port
 ### Also, create a `.env` file inside the `frontend/` directory and add the following keys:
 
 > ⚠️ **Environment Variables Note:** \
-If you're using **Vite**, all environment variable names must be prefixed with **VITE_**.
+If you're using **Vite**, all environment variable names must be prefixed with **VITE_**. \
 If you're using **Create React App (CRA)**, they must be prefixed with **REACT_APP_**. \
 These prefixes are required to expose the variables to the frontend code.
 
