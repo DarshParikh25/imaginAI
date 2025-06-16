@@ -12,6 +12,7 @@ const Login = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [auth, setAuth] =useState(false);
 
     useEffect(() => {
         document.body.style.overflow = 'hidden';
@@ -23,7 +24,29 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            if(state === 'login') {
+            const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+            const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+            const publicKey = import.meta.env.VITE_EMAILJS_API_PUBLIC_KEY;
+
+            const emailjsData = {
+                service_id: serviceId,
+                template_id: templateId,
+                user_id: publicKey,
+                template_params: {
+                    username: name,
+                    user_email: email,
+                    action: state === 'login' ? 'logging in' : 'registering',
+                    OTP_CODE: 451425
+                }
+            }
+
+            try {
+                await axios.post('https://api.emailjs.com/api/v1.0/email/send', emailjsData);
+            } catch (error) {
+                toast.error(error.message);
+            }
+
+            if(state === 'login' && auth) {
                 const { data } = await axios.post(backendUrl + '/api/user/login', {
                     email, 
                     password
@@ -36,13 +59,13 @@ const Login = () => {
                 } else {
                     toast.error(data.message)
                 }
-            } else {
+            } else if(state === 'register' && auth) {
                 const { data } = await axios.post(backendUrl + '/api/user/register', {
                     name,
                     email,
                     password
                 })
-                if(data.success) {
+                if(data.success && auth) {
                     setToken(data.token);
                     setUser(data.user);
                     localStorage.setItem('token', data.token);
@@ -73,7 +96,7 @@ const Login = () => {
                 {
                     state === 'register' && (
                         <div className='border-[1.5px] border-black/50 px-4 py-2 flex items-center rounded-full mt-5 gap-3'>
-                            <img src="/name.png" alt="" width={20} />
+                            <img src="./src/assets/name.png" alt="" width={20} />
                             <input
                                 onChange={e => {
                                     setName(e.target.value)
@@ -88,7 +111,7 @@ const Login = () => {
                     )
                 }
                 <div className='border-[1.5px] border-black/50 px-4 py-2 flex items-center rounded-full mt-4 gap-3'>
-                    <img src="/email.png" alt="" width={20} />
+                    <img src="./src/assets/email.png" alt="" width={20} />
                     <input 
                         onChange={e => {
                             setEmail(e.target.value);
@@ -101,7 +124,7 @@ const Login = () => {
                     />
                 </div>
                 <div className='border-[1.5px] border-black/50 px-4 py-2 flex items-center rounded-full mt-4 gap-3'>
-                    <img src="/password.png" alt="" width={20} />
+                    <img src="./src/assets/password.png" alt="" width={20} />
                     <input 
                         onChange={e => {
                             setPassword(e.target.value);
@@ -126,7 +149,7 @@ const Login = () => {
                         <p className='mt-5 text-center text-xs'>Existing user? <span onClick={() => {setState('login')}} className='text-blue-900 cursor-pointer'>Log In!</span></p>
                     )
                 }
-                <img src="/close.svg" alt="" onClick={() => {setShowLogin(false)}} className='absolute top-5 right-5 cursor-pointer' />
+                <img src="./src/assets/close.svg" alt="" onClick={() => {setShowLogin(false)}} className='absolute top-5 right-5 cursor-pointer' />
             </form>
         </motion.div>
     )

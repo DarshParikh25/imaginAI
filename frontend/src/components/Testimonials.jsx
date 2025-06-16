@@ -4,21 +4,21 @@ import { motion } from 'motion/react';
 const Testimonials = () => {
     const tests = [
         {
-            image: "/cust1.png",
+            image: "./src/assets/cust1.png",
             name: "Jane Smith",
             role: "Graphic Designer",
             stars: 4,
             text: "I love how easy it is to create engaging content. The AI does a fantastic job understanding my needs."
         },
         {
-            image: "/cust2.png",
+            image: "./src/assets/cust2.png",
             name: "Alice Johnson",
             role: "Freelancer",
             stars: 5,
             text: "As a freelancer, I need to produce high-quality content quickly. This service has been a game-changer for me!"
         },
         {
-            image: "/cust1.png",
+            image: "./src/assets/cust1.png",
             name: "Bob Brown",
             role: "Content Creator",
             stars: 4,
@@ -48,10 +48,10 @@ const Testimonials = () => {
                             </div>
                             <div className='flex mb-5'>
                                 {[...Array(test.stars)].map((_, i) => (
-                                    <img key={i} src="/rating_star.svg" alt="" />
+                                    <img key={i} src="./src/assets/rating_star.svg" alt="" />
                                 ))}
                                 {[...Array(5 - test.stars)].map((_, i) => (
-                                    <img key={i} src="/not_rated_star.svg" alt="" />
+                                    <img key={i} src="./src/assets/not_rated_star.svg" alt="" />
                                 ))}
                             </div>
                             <p className='text-[#ffffffaf] mb-2'>{test.text}</p>
