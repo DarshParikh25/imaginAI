@@ -16,7 +16,13 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-    origin: 'http://localhost:5173', // your frontend port
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error("CORS not allowed for this origin"));
+        }
+    },
     credentials: true
 }));
 
