@@ -69,7 +69,7 @@ const BuyCredits = () => {
 
     const plans = [
         {
-            icon: "./src/assets/basic.png",
+            icon: "/basic.png",
             id: "Basic",
             desc: "For individuals and hobbyists",
             price: "$9.99",
@@ -77,7 +77,7 @@ const BuyCredits = () => {
             costpercredit: "$0.20",
         },
         {
-            icon: "./src/assets/advanced.png",
+            icon: "/advanced.png",
             id: "Advanced",
             desc: "Built for creators and pros",
             price: "$29.99",
@@ -85,7 +85,7 @@ const BuyCredits = () => {
             costpercredit: "$0.12",
         },
         {
-            icon: "./src/assets/business.png",
+            icon: "/business.png",
             id: "Business",
             desc: "Designed for teams and enterprises",
             price: "$79.99",

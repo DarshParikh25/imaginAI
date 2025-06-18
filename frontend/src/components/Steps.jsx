@@ -6,17 +6,17 @@ const Steps = () => {
         {
             title: "Type What You Imagine",
             description: "Describe any idea, scene, or concept using simple words — your imagination is the only limit.",
-            icon: "./src/assets/step1.svg"
+            icon: "/step1.svg"
         },
         {
             title: "Let AI Visualize It",
             description: "Our intelligent AI-powered engine brings your prompt to life — generating a unique image in just seconds.",
-            icon: "./src/assets/step2.svg"
+            icon: "/step2.svg"
         },
         {
             title: "Download. Share. Repeat.",
             description: "Save your artwork instantly or share it directly with friends, clients, or the world.",
-            icon: "./src/assets/step3.svg"
+            icon: "/step3.svg"
         }
     ];
     return (

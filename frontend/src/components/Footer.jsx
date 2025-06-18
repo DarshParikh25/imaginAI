@@ -13,15 +13,15 @@ const Footer = () => {
         >
             <div className='flex items-center justify-center gap-10 max-sm:flex-wrap'>
                 <Link to={"/"}>
-                    <img src="./src/assets/logo.png" alt="" className='w-28 sm:w-32 lg:w-40 cursor-pointer' />
+                    <img src="/logo.png" alt="" className='w-28 sm:w-32 lg:w-40 cursor-pointer' />
                 </Link>
                 <p className='text-4xl font-extralight text-[#ffffffaf] relative -top-0.5 hidden sm:block'>|</p>
                 <p className='text-sm text-[#ffffffaf]'>All rights reserved. Copyright &copy; <span className='text-[#b49166] font-bold'>imaginAI</span></p>
             </div>
             <div className='flex items-center justify-center gap-4'>
-                <img src="./src/assets/facebook.svg" alt="" width={40} className='hover:scale-105 transition-all duration-500 cursor-pointer' />
-                <img src="./src/assets/instagram.svg" alt="" width={40} className='hover:scale-105 transition-all duration-500 cursor-pointer' />
-                <img src="./src/assets/twitter.svg" alt="" width={40} className='hover:scale-105 transition-all duration-500 cursor-pointer' />
+                <img src="/facebook.svg" alt="" width={40} className='hover:scale-105 transition-all duration-500 cursor-pointer' />
+                <img src="/instagram.svg" alt="" width={40} className='hover:scale-105 transition-all duration-500 cursor-pointer' />
+                <img src="/twitter.svg" alt="" width={40} className='hover:scale-105 transition-all duration-500 cursor-pointer' />
             </div>
         </motion.div>
     )

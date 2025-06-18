@@ -136,7 +136,7 @@ const Login = () => {
                 {
                     state === 'register' && (
                         <div className='border-[1.5px] border-black/50 px-4 py-2 flex items-center rounded-full mt-5 gap-3'>
-                            <img src="./src/assets/name.png" alt="" width={20} />
+                            <img src="/name.png" alt="" width={20} />
                             <input
                                 onChange={e => {
                                     setName(e.target.value)
@@ -151,7 +151,7 @@ const Login = () => {
                     )
                 }
                 <div className='border-[1.5px] border-black/50 px-4 py-2 flex items-center rounded-full mt-4 gap-3'>
-                    <img src="./src/assets/email.png" alt="" width={20} />
+                    <img src="/email.png" alt="" width={20} />
                     <input 
                         onChange={e => {
                             setEmail(e.target.value);
@@ -164,7 +164,7 @@ const Login = () => {
                     />
                 </div>
                 <div className='border-[1.5px] border-black/50 px-4 py-2 flex items-center rounded-full mt-4 gap-3'>
-                    <img src="./src/assets/password.png" alt="" width={20} />
+                    <img src="/password.png" alt="" width={20} />
                     <input 
                         onChange={e => {
                             setPassword(e.target.value);
@@ -235,7 +235,7 @@ const Login = () => {
                         <p className='mt-5 text-center text-xs'>Existing user? <span onClick={() => {setState('login')}} className='text-blue-900 cursor-pointer'>Log In!</span></p>
                     )
                 }
-                <img src="./src/assets/close.svg" alt="" onClick={() => {setShowLogin(false); setSendBtn(false); setVerifyBtn(false); setSubmitBtn(false)}} className='absolute top-5 right-5 cursor-pointer' />
+                <img src="/assets/close.svg" alt="" onClick={() => {setShowLogin(false); setSendBtn(false); setVerifyBtn(false); setSubmitBtn(false)}} className='absolute top-5 right-5 cursor-pointer' />
             </form>
         </motion.div>
     )

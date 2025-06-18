@@ -32,7 +32,7 @@ const Header = () => {
                 transition={{duration: 0.8, delay: 0.2}}
             >
                 <p className='text-xs sm:text-sm font-light'>From words to wonder</p>
-                <img src="./src/assets/shooting_star.svg" alt="" />
+                <img src="/shooting_star.svg" alt="" />
             </motion.div>
 
             <motion.h1 
@@ -57,7 +57,7 @@ const Header = () => {
                 transition={{ default: { duration: 0.5 }, opacity: { delay: 0.8, duration: 1 } }}
             >
                 <p className='sm:text-lg text-black font-medium'>Generate Image</p>
-                <img src="./src/assets/star.png" alt="" className='h-6' />
+                <img src="/star.png" alt="" className='h-6' />
             </motion.button>
 
             <motion.div 
@@ -67,7 +67,7 @@ const Header = () => {
                 transition={{ delay: 1, duration: 1 }}
             >
                 {Array(6).fill('').map((item, index) => (
-                    <img className='rounded hover:scale-105 transition-all duration-300 cursor-pointer max-sm:w-10' src={index % 2 === 0 ? "./src/assets/sample_img_2.png" : "./src/assets/sample_img_1.png"} alt="" key={index} width={70} />
+                    <img className='rounded hover:scale-105 transition-all duration-300 cursor-pointer max-sm:w-10' src={index % 2 === 0 ? "/sample_img_2.png" : "/sample_img_1.png"} alt="" key={index} width={70} />
                 ))}
             </motion.div>
             <motion.p 
