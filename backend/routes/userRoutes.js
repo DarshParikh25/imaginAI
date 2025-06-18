@@ -1,5 +1,5 @@
 import express from "express";
-import { registerUser, loginUser, userCredits, razorpayPayment, verifyPayment } from "../controllers/userController.js";
+import { registerUser, loginUser, userCredits, razorpayPayment, verifyPayment, sendOtp, verifyOtp } from "../controllers/userController.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
 
 // Create a new router instance
@@ -9,7 +9,9 @@ userRouter.post("/register", registerUser); // Route for user registration
 userRouter.post("/login", loginUser); // Route for user login
 userRouter.get("/credits", authMiddleware, userCredits); // Route for user credits balance
 userRouter.post("/pay", authMiddleware, razorpayPayment); // Route for user to pay for credits
-userRouter.post("/verify", verifyPayment); // Route for verify the payment of the user for the credits
+userRouter.post("/verify-payment", verifyPayment); // Route for verify the payment of the user for the credits
+userRouter.post('/send-otp', sendOtp); // Routes for sending otp to the user for logging in or registering
+userRouter.post('/verify-otp', verifyOtp); // Routes for verifying the otp the user entered for successfully logging in or registering
 
 export default userRouter;
 

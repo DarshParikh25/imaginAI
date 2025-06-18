@@ -22,7 +22,7 @@ const BuyCredits = () => {
             receipt: receipt,
             handler: async (response) => {
                 try {
-                    const { data } = await axios.post(backendUrl + '/api/user/verify', { response }, {
+                    const { data } = await axios.post(backendUrl + '/api/user/verify-payment', { response }, {
                         headers: { token }
                     })
 

@@ -1,8 +1,10 @@
-import userModel from "../models/userModel.js";
-import transactionModel from "../models/transactionModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import razorpay from 'razorpay';
+import nodemailer from 'nodemailer';
+import userModel from "../models/userModel.js";
+import transactionModel from "../models/transactionModel.js";
+import otpModel from "../models/otpModel.js";
 
 // Register a new user
 // take input(name, email, password) -> check if all fields are filed -> encrypt password using bcrypt -> save the user data in the database using userModel -> generate token using JWT(jsonwebtoken) -> return success response with token and user data
@@ -261,4 +263,99 @@ const verifyPayment = async (req, res) => {
     }
 }
 
-export { registerUser, loginUser, userCredits, razorpayPayment, verifyPayment };
+const sendOtp = async (req, res) => {
+    try {
+        const { email, name, state } = req.body;
+
+        const existingUser = await userModel.findOne({ email });
+
+        if(state === 'register' && existingUser) {
+            return res.json({
+                success: false,
+                message: 'Email is already registered! Please log in.'
+            })
+        }
+    
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        const hashedOtp = await bcrypt.hash(otp, 10);
+
+        await otpModel.create({ email, otpCode: hashedOtp });
+
+        // Send Email using Gmail SMTP
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.GMAIL_USER,
+                pass: process.env.GMAIL_PASS
+            }
+        })
+
+        const content = `
+            <p>Hi, ${name}</p>
+            <p>Welcome to <strong>imaginAI</strong> - your creative companion for transforming text prompts into stunning AI-generated images.</p>
+            <p>Your One-Time-Password (OTP) for registering is:</p>
+            <br />
+            <h1><strong>${otp}</strong></h1>
+            <br />
+            <p>This code is valid for <strong>10 minutes</strong>.</p>
+            <p>Please <strong>do not share</strong> this OTP with anyone else.</p>
+            <p>If you didn't request this, you can safely ignore this email.</p>
+            <p>imaginAI will never contact you about this email or ask for any login codes or links. Beware of phishing scams.</p>
+            <p>Need help? Contact us at: <strong>${process.env.GMAIL_USER}</strong></p>
+            <p>Thanks,</p>
+            <p><strong>Team imaginAI</strong></p>
+            <a href='https://imaginai-frontend-w3y0.onrender.com/'><strong>imaginAI</strong></a>
+        `;
+
+        const mailOptions = {
+            from: `"imaginAI" <${process.env.GMAIL_USER}>`,
+            to: email,
+            subject: '🔐 Your imaginAI OTP Verification Code',
+            html: content
+        }
+
+        await transporter.sendMail(mailOptions);
+
+        console.log("OTP sent:", otp);
+        console.log("Sending OTP to:", email);
+        res.json({
+            success:true,
+            message: 'OTP sent successfully!'
+        })
+    } catch (error) {
+        res.json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
+const verifyOtp = async (req, res) => {
+    const { email, otp } = req.body;
+    
+    const otpRecord = await otpModel.findOne({ email }).sort({ createdAt: -1 });
+
+    if(!otpRecord) {
+        return res.json({
+            success: false,
+            message: 'OTP Expired or Not Found!'
+        })
+    }
+    
+    const isMatch = await bcrypt.compare(otp, otpRecord.otpCode);
+
+    if(!isMatch) {
+        return res.json({
+            success: false,
+            message: 'Incorrect OTP!'
+        })
+    }
+
+    await otpModel.deleteMany({ email }); // Delete all the OTPs from this email
+    res.json({
+        success: true,
+        message: 'OTP Verified!'
+    })
+}
+
+export { registerUser, loginUser, userCredits, razorpayPayment, verifyPayment, sendOtp, verifyOtp };

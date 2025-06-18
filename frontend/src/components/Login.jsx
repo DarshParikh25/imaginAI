@@ -1,8 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { AppContext } from '../context/AppContext';
 import { motion } from 'motion/react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import OTPField from './OTPField';
 
 const Login = () => {
 
@@ -13,6 +14,11 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [auth, setAuth] =useState(false);
+    const [otp, setOtp] = useState('');
+    const [otpSent, setOtpSent] = useState(false);
+    const [submitBtn, setSubmitBtn] = useState(false);
+    const [sendBtn, setSendBtn] = useState(false);
+    const [verifyBtn, setVerifyBtn] = useState(false);
 
     useEffect(() => {
         document.body.style.overflow = 'hidden';
@@ -21,32 +27,64 @@ const Login = () => {
         }
     }, [])
 
+    const handleSendOtp = async (e) => {
+        e.preventDefault(); // Prevent default form submission
+        setSendBtn(true);
+
+        try {
+            const { data } = await axios.post(backendUrl + '/api/user/send-otp', {
+                email,
+                name,
+                state
+            })
+
+            if(data.success) {
+                toast.success('OTP sent!');
+                setOtpSent(true);
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || 'Failed to send OTP.');
+        } finally {
+            setSendBtn(false); // Always resets the btn
+        }
+    }
+
+    const handleVerifyOtp = async (e) => {
+        e.preventDefault();
+        setVerifyBtn(true);
+
+        try {
+            const { data } = await axios.post(backendUrl + '/api/user/verify-otp', {
+                email,
+                otp
+            })
+
+            if(data.success) {
+                toast.success('OTP Verified!');
+                setAuth(true);
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || 'Failed to verify OTP.');
+        } finally {
+            setVerifyBtn(false); // Always resets the btn
+        }
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setSubmitBtn(true);
+        if(state === 'register' && !auth) {
+            toast.error('Please verify the OTP first!');
+            setSubmitBtn(false);
+            return;
+        }
+
         try {
-            const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-            const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-            const publicKey = import.meta.env.VITE_EMAILJS_API_PUBLIC_KEY;
-
-            const emailjsData = {
-                service_id: serviceId,
-                template_id: templateId,
-                user_id: publicKey,
-                template_params: {
-                    username: name,
-                    user_email: email,
-                    action: state === 'login' ? 'logging in' : 'registering',
-                    OTP_CODE: 451425
-                }
-            }
-
-            try {
-                await axios.post('https://api.emailjs.com/api/v1.0/email/send', emailjsData);
-            } catch (error) {
-                toast.error(error.message);
-            }
-
-            if(state === 'login' && auth) {
+            if(state === 'login') {
                 const { data } = await axios.post(backendUrl + '/api/user/login', {
                     email, 
                     password
@@ -59,13 +97,13 @@ const Login = () => {
                 } else {
                     toast.error(data.message)
                 }
-            } else if(state === 'register' && auth) {
+            } else if(state === 'register') {
                 const { data } = await axios.post(backendUrl + '/api/user/register', {
                     name,
                     email,
                     password
                 })
-                if(data.success && auth) {
+                if(data.success) {
                     setToken(data.token);
                     setUser(data.user);
                     localStorage.setItem('token', data.token);
@@ -76,6 +114,8 @@ const Login = () => {
             }
         } catch (error) {
             toast.error(error.message);
+        } finally {
+            setSubmitBtn(false); // resets btn no matter what
         }
     }
 
@@ -137,11 +177,57 @@ const Login = () => {
                     />
                 </div>
                 {
-                    state === 'login' && (
-                        <p className='text-xs text-blue-900 ml-1 mt-4 cursor-pointer'>Can't remember your password?</p>
-                    )
+                    state === 'login' ? 
+                        <>
+                            <p className='text-xs text-blue-900 ml-1 mt-4 cursor-pointer'>Can't remember your password?</p>
+                            <button 
+                                type="submit" 
+                                disabled={submitBtn}
+                                className={`${!submitBtn ? 'bg-[#5c4d38] hover:scale-[1.02] text-white' : 'bg-[#5c4d3884] hover:cursor-not-allowed text-black'} border-none text-sm w-full py-2 rounded-full mt-4 cursor-pointer transition-all duration-700`}
+                            >
+                                {submitBtn ? 'Loading...' : 'Log In'}
+                            </button>
+                        </> 
+                    :
+                        <>
+                            {
+                                !otpSent && (
+                                    <button
+                                        onClick={handleSendOtp} 
+                                        disabled={sendBtn}
+                                        className={`${!sendBtn ? 'bg-[#5c4d38] hover:scale-[1.02] text-white' : 'bg-[#5c4d3884] hover:cursor-not-allowed text-black'} border-none text-sm w-full py-2 rounded-full mt-4 cursor-pointer transition-all duration-700`}
+                                    >
+                                        {sendBtn ? 'Sending OTP...' : 'Send OTP'}
+                                    </button>
+                                )
+                            }
+                            {
+                                otpSent && !auth && (
+                                    <>
+                                        <OTPField onChangeOtp={setOtp} />
+                                        <button 
+                                            onClick={handleVerifyOtp} 
+                                            disabled={verifyBtn}
+                                            className={`${!verifyBtn ? 'bg-[#5c4d38] hover:scale-[1.02] text-white' : 'bg-[#5c4d3884] hover:cursor-not-allowed text-black'} border-none text-sm w-full py-2 rounded-full mt-4 cursor-pointer transition-all duration-700`}
+                                        >
+                                            {verifyBtn ? 'Verifying OTP...' : 'Verify OTP'}
+                                        </button>
+                                    </>
+                                )
+                            }
+                            {
+                                auth && (
+                                    <button 
+                                        type="submit" 
+                                        disabled={submitBtn}
+                                        className={`${!submitBtn ? 'bg-[#5c4d38] hover:scale-[1.02] text-white' : 'bg-[#5c4d389e] hover:cursor-not-allowed text-black'} border-none text-sm w-full py-2 rounded-full mt-4 cursor-pointer transition-all duration-700`}
+                                    >
+                                        {submitBtn ? 'Loading...' : 'Register'}
+                                    </button>
+                                )
+                            }
+                        </>
                 }
-                <button type="submit" className='bg-[#5c4d38] border-none text-white text-sm w-full py-2 rounded-full mt-4 cursor-pointer hover:scale-[1.02] transition-all duration-700'>{state === 'login' ? 'Log In' : 'Register'}</button>
                 {
                     state === 'login' ? (
                         <p className='mt-5 text-center text-xs'>New here? <span onClick={() => {setState('register')}} className='text-blue-900 cursor-pointer'>Register Now!</span></p>
@@ -149,7 +235,7 @@ const Login = () => {
                         <p className='mt-5 text-center text-xs'>Existing user? <span onClick={() => {setState('login')}} className='text-blue-900 cursor-pointer'>Log In!</span></p>
                     )
                 }
-                <img src="./src/assets/close.svg" alt="" onClick={() => {setShowLogin(false)}} className='absolute top-5 right-5 cursor-pointer' />
+                <img src="./src/assets/close.svg" alt="" onClick={() => {setShowLogin(false); setSendBtn(false); setVerifyBtn(false); setSubmitBtn(false)}} className='absolute top-5 right-5 cursor-pointer' />
             </form>
         </motion.div>
     )
